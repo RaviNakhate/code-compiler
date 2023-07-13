@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import replaceQuotesAndNewlines from "../utils/replaceQuotesAndNewlines.js";
 import convertEscapedCharacters from "../utils/convertEscapedCharacters.js";
+import { urlApi } from "../utils/constant";
 
 const CodeEditor = () => {
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ const CodeEditor = () => {
       }
 
       const { data } = await axios.post(
-        "http://localhost:5000/submissions/",
+        `${urlApi}/submissions/`,
         {
           language_id: language,
           source_code: replaceQuotesAndNewlines(code),
@@ -104,20 +105,17 @@ const CodeEditor = () => {
 
   const getData = async () => {
     const username = await localStorage.getItem("username");
-    const { data } = await axios.get(
-      `http://localhost:5000/submissions/${username}`,
-      {
-        headers: {
-          token: localStorage.getItem("token"),
-        },
-      }
-    );
+    const { data } = await axios.get(`${urlApi}/submissions/${username}`, {
+      headers: {
+        token: localStorage.getItem("token"),
+      },
+    });
     setCode(convertEscapedCharacters(data.source_code));
     setPreviousCode(convertEscapedCharacters(data.source_code));
   };
 
   const getLanguages = async () => {
-    const { data } = await axios.get(`http://localhost:5000/key`);
+    const { data } = await axios.get(`${urlApi}/auth/key`);
     const headers = await {
       "Content-Type": "application/json",
       "X-RapidAPI-Key": data.key,

@@ -3,6 +3,7 @@ import "./modal.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { urlApi } from "../utils/constant";
 
 const Model = ({ closeModal }) => {
   const [username, setUsername] = useState("");
@@ -10,7 +11,7 @@ const Model = ({ closeModal }) => {
 
   const handleLogin = async () => {
     try {
-      const { data } = await axios.post("http://localhost:5000/auth/login", {
+      const { data } = await axios.post(`${urlApi}/auth/login`, {
         username,
         password,
       });
@@ -31,7 +32,7 @@ const Model = ({ closeModal }) => {
   const handleRegister = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/auth//register",
+        `${urlApi}/auth//register`,
         {
           username,
           password,

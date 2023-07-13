@@ -1,0 +1,65 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-login-header,
+.btn-register-header {
+  display: inline-block;
+  outline: 0;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+  background: #fff;
+  border: 1px solid #d5d9d9;
+  font-size: 13px;
+  height: 31px;
+  padding: 0 11px;
+  text-align: center;
+  font-weight: 400;
+  color: #0f1111;
+  margin-right: 7px;
+  padding: auto 5px;
+}
+.btn-login-header:hover,
+.btn-register-header:hover {
+  background-color: #f7fafa;
+  border-color: #d5d9d9;
+}
+
+.label-username {
+  display: inline-block;
+  padding: 0 10px;
+  height: 45px;
+  line-height: 45px;
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 16px;
+  background: #fff;
+  color: #696969;
+  /*   box-shadow: 0 4px 14px 0 rgb(0 0 0 / 10%); */
+  /* transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; */
+  margin-right: 15px;
+}
+
+.btn-logout {
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  font-weight: 600;
+  color: rgb(72, 76, 122);
+  font-size: 14px;
+  height: 38px;
+  padding: 8px 24px;
+  border-radius: 50px;
+  background-image: linear-gradient(180deg, #fff, #f5f5fa);
+  box-shadow: 0 4px 11px 0 rgb(37 44 97 / 15%),
+    0 1px 3px 0 rgb(93 100 148 / 20%);
+  transition: all 0.2s ease-out;
+  /*    :hover{
+        box-shadow: 0 8px 22px 0 rgb(37 44 97 / 15%), 0 4px 6px 0 rgb(93 100 148 / 20%);
+    } */
+  margin-right: 7px;
+}

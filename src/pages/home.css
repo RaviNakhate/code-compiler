@@ -1,7 +1,11 @@
-.code-snippet {
-  display: flex;
+@media screen and (min-width: 768px) {
+  .code-snippet {
+    display: flex;
+  }
 }
-
+/* .btn {
+  min-width: 150px;
+} */
 .btn,
 .select {
   display: inline-block;

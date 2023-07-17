@@ -19,6 +19,7 @@ const Model = ({ closeModal }) => {
         toast.error(data.error, { theme: "dark" });
       } else {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("key", data.key);
         localStorage.setItem("username", username);
         toast.success("Login Success", { theme: "dark" });
         closeModal();

@@ -8,31 +8,26 @@ import axios from "axios";
 import "./home.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector, useDispatch } from "react-redux";
-import replaceQuotesAndNewlines from "../utils/replaceQuotesAndNewlines.js";
-import convertEscapedCharacters from "../utils/convertEscapedCharacters.js";
-import { urlApi } from "../utils/constant";
+import { key } from "../utils/constant";
 import { useMediaQuery } from "react-responsive";
 
 const CodeEditor = () => {
   const isBigScreen = useMediaQuery({ query: "(min-width: 768px)" });
-  const dispatch = useDispatch();
-  const state = useSelector((state) => state);
   const [previousCode, setPreviousCode] = useState("");
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState(52);
   const [output, setOutput] = useState("");
   const [lang, setLang] = useState([{ id: 52, name: "C++ (GCC 7.4.0)" }]);
   const [loading, setLoading] = useState(false);
-  const [buttonDisplay, setButtonDisplay] = useState("Save & Execute");
+  const [buttonDisplay, setButtonDisplay] = useState("Execute");
   const headers = {
-    "Content-Type": "application/json",
-    "X-RapidAPI-Key": localStorage.getItem("key"),
-    "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+    'content-type': 'application/json',
+    'Content-Type': 'application/json',
+    'X-RapidAPI-Key': '0eeb0f7f9emsh5fbf936cceca7fep11c0f0jsn0daffe29c2a5',
+    'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
   };
 
   useEffect(() => {
-    getData();
     getLanguages();
   }, []);
 
@@ -54,32 +49,10 @@ const CodeEditor = () => {
         clearInterval(intervalId);
       };
     } else {
-      setButtonDisplay("Save & Execute");
+      setButtonDisplay("Execute");
     }
   }, [loading]);
 
-  // SET judge0 INPUT TOKEN
-  const setTokenKey = async (token) => {
-    try {
-      const { data } = await axios.post(
-        `${urlApi}/submissions/setTokenKey`,
-        {
-          token_key: token,
-          username: localStorage.getItem("username"),
-        },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        }
-      );
-      if (data?.error) {
-        toast.error(data.error, { theme: "dark" });
-      }
-    } catch (err) {
-      toast.error("Server Error", { theme: "dark" });
-    }
-  };
 
   // GET OUTPUT FROM judge0
   const getCodeOutput = async (token) => {
@@ -121,31 +94,13 @@ const CodeEditor = () => {
   const executeCode = async () => {
     try {
       if (code.trim() === "" || code == null) {
-        if (localStorage.getItem("token_key")) {
-          await getCodeOutput(localStorage.getItem("token_key"));
-        }
         setLoading(false);
         return 0;
       }
-      const { data } = await axios.post(
-        `${urlApi}/submissions/`,
-        {
-          language_id: language,
-          source_code: replaceQuotesAndNewlines(code),
-          username: localStorage.getItem("username"),
-        },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        }
-      );
-      setPreviousCode(code);
 
+      await setPreviousCode(code);
       const token = await sendCode(headers);
-      // const token = "7016fcda-bb9d-4410-a06a-dc6c6163abea";
-      localStorage.removeItem("token_key");
-      await setTokenKey(token);
+
       setTimeout(() => {
         getCodeOutput(token);
         setLoading(false);
@@ -163,25 +118,11 @@ const CodeEditor = () => {
     }
   };
 
-  // GET SOURCE_CODE ON REFREST USING useEffect
-  const getData = async () => {
-    const username = await localStorage.getItem("username");
-    const { data } = await axios.get(`${urlApi}/submissions/${username}`, {
-      headers: {
-        token: localStorage.getItem("token"),
-      },
-    });
-    setCode(convertEscapedCharacters(data.source_code));
-    setPreviousCode(convertEscapedCharacters(data.source_code));
-    localStorage.setItem("token_key", data?.token_key);
-  };
-
   // GET LANGUAGES LIST
   const getLanguages = async () => {
-    const { data } = await axios.get(`${urlApi}/auth/key`);
     const headers = {
       "Content-Type": "application/json",
-      "X-RapidAPI-Key": data.key,
+      "X-RapidAPI-Key": key,
       "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
     };
     const result = await axios.get(
@@ -190,10 +131,12 @@ const CodeEditor = () => {
         headers,
       }
     );
+    console.log(result.data);
     setLang(result.data);
   };
   return (
     <div style={{ marginBottom: "25px" }}>
+      {/* Code window */}
       <div className="code-snippet">
         <AceEditor
           mode={"javascript"}
@@ -202,7 +145,7 @@ const CodeEditor = () => {
           onChange={setCode}
           height="400px"
           width={isBigScreen ? "50%" : "100%"}
-          style={state ? { zIndex: "-1" } : {}}
+          /* style={state ? { zIndex: "-1" } : {}} */
           fontSize={16}
           showPrintMargin={true}
           showGutter={true}
@@ -226,7 +169,7 @@ const CodeEditor = () => {
           value={output}
           height="400px"
           width={isBigScreen ? "50%" : "100%"}
-          style={state ? { zIndex: "-1" } : {}}
+          /* style={state ? { zIndex: "-1" } : {}} */
           fontSize={16}
           showPrintMargin={true}
           showGutter={true}
@@ -240,9 +183,12 @@ const CodeEditor = () => {
           }}
           readOnly={true}
         />
+      
+      {/* Buttons */}
       </div>
-      <div>
-        <select
+      <div className="flex">
+        <div>
+          <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
           className="select"
@@ -255,21 +201,30 @@ const CodeEditor = () => {
             );
           })}
         </select>
+        </div>
+        
 
-        <button
-          /* onClick={executeCode}  */ onClick={async () => {
-            if (localStorage.getItem("token")) {
+        <div className="label">
+          Compile with input
+          <input type="radio" disabled></input>Yes
+          <input type="radio" checked disabled></input>No
+        </div>
+
+      <div>
+          <button
+           onClick={async () => {
               setLoading(true);
               await executeCode();
-            } else dispatch({ type: "true" });
           }}
           className="btn"
           style={loading ? { cursor: "progress" } : {}}
-          disabled={loading ? true : false}
+          //disabled={loading ? true : false}
         >
           {buttonDisplay}
-          {previousCode !== code ? "*" : null}
-        </button>
+          {previousCode !== code ? " *" : null}
+         </button>
+      </div>
+       
       </div>
       <ToastContainer />
     </div>

@@ -2,12 +2,15 @@
   .code-snippet {
     display: flex;
   }
+  .flex {
+    display: flex;
+  }
 }
 /* .btn {
   min-width: 150px;
 } */
 .btn,
-.select {
+.select,.label {
   display: inline-block;
   outline: 0;
   border: none;
@@ -24,7 +27,12 @@
   background-color: #0000001a;
 }
 .btn,
-.select {
+.select,.label{
   margin: 10px;
   margin-top: 15px;
 }
+.label {
+  padding-top: 3px;
+  cursor: default;
+}
+
